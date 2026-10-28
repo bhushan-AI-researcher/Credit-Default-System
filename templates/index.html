@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI-powered credit card default risk prediction system." />
+  <title>Credit Risk Intelligence | Default Prediction System</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- ── Animated background ── -->
+  <div class="bg-gradient" aria-hidden="true"></div>
+  <div class="bg-orb orb1" aria-hidden="true"></div>
+  <div class="bg-orb orb2" aria-hidden="true"></div>
+  <div class="bg-orb orb3" aria-hidden="true"></div>
+
+  <div class="page-wrapper">
+
+    <!-- ── Header ── -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-icon">⚡</span>
+          <div>
+            <span class="logo-title">CreditAI</span>
+            <span class="logo-sub">Default Risk Engine</span>
+          </div>
+        </div>
+        <div class="header-badges">
+          <span class="badge badge-ml">ML Powered</span>
+          <span class="badge badge-xai">Explainable AI</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Hero ── -->
+    <section class="hero">
+      <h1 class="hero-title">
+        Credit Default
+        <span class="gradient-text">Prediction System</span>
+      </h1>
+      <p class="hero-sub">
+        Powered by Random Forest &amp; Logistic Regression trained on the
+        <strong>UCI Credit-Card dataset (30 000 records)</strong>.
+        Get instant risk scores with human-readable explanations.
+      </p>
+    </section>
+
+    <!-- ── Main Grid ── -->
+    <main class="main-grid" id="main-content">
+
+      <!-- ── Input Card ── -->
+      <section class="card input-card" aria-label="Customer Input Form">
+        <div class="card-header">
+          <span class="card-icon">📋</span>
+          <h2 class="card-title">Customer Profile</h2>
+        </div>
+        <p class="card-desc">Enter the customer's financial details to assess credit default risk.</p>
+
+        <form id="predict-form" novalidate>
+
+          <div class="form-grid">
+
+            <!-- Age -->
+            <div class="field-group">
+              <label for="age" class="field-label">
+                Age
+                <span class="field-unit">years</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-icon">👤</span>
+                <input
+                  type="number" id="age" name="age"
+                  min="18" max="100" value="35"
+                  class="field-input" required
+                  aria-describedby="age-hint"
+                />
+              </div>
+              <span id="age-hint" class="field-hint">18 – 100</span>
+            </div>
+
+            <!-- Income -->
+            <div class="field-group">
+              <label for="income" class="field-label">
+                Annual Income
+                <span class="field-unit">USD</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-icon">💰</span>
+                <input
+                  type="number" id="income" name="income"
+                  min="0" step="1000" value="60000"
+                  class="field-input" required
+                  aria-describedby="income-hint"
+                />
+              </div>
+              <span id="income-hint" class="field-hint">Gross annual income</span>
+            </div>
+
+            <!-- Credit Limit -->
+            <div class="field-group">
+              <label for="credit_limit" class="field-label">
+                Credit Limit
+                <span class="field-unit">USD</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-icon">💳</span>
+                <input
+                  type="number" id="credit_limit" name="credit_limit"
+                  min="1" step="500" value="50000"
+                  class="field-input" required
+                  aria-describedby="limit-hint"
+                />
+              </div>
+              <span id="limit-hint" class="field-hint">Total credit card limit</span>
+            </div>
+
+            <!-- Credit Utilization -->
+            <div class="field-group">
+              <label for="credit_utilization" class="field-label">
+                Credit Utilization
+                <span class="field-unit">%</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-icon">📊</span>
+                <input
+                  type="number" id="credit_utilization" name="credit_utilization"
+                  min="0" max="100" step="0.1" value="30"
+                  class="field-input" required
+                  aria-describedby="util-hint"
+                />
+              </div>
+              <div class="util-bar-container" aria-hidden="true">
+                <div class="util-bar" id="util-bar"></div>
+              </div>
+              <span id="util-hint" class="field-hint">0 – 100 %</span>
+            </div>
+
+            <!-- Late Payments -->
+            <div class="field-group">
+              <label for="late_payments" class="field-label">
+                Late Payments
+                <span class="field-unit">months</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-icon">⏰</span>
+                <input
+                  type="number" id="late_payments" name="late_payments"
+                  min="0" max="6" value="0"
+                  class="field-input" required
+                  aria-describedby="late-hint"
+                />
+              </div>
+              <span id="late-hint" class="field-hint">0 (none) – 6 (all months)</span>
+            </div>
+
+            <!-- Monthly Balance -->
+            <div class="field-group">
+              <label for="monthly_balance" class="field-label">
+                Monthly Payment
+                <span class="field-unit">USD</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-icon">📅</span>
+                <input
+                  type="number" id="monthly_balance" name="monthly_balance"
+                  min="0" step="100" value="2000"
+                  class="field-input" required
+                  aria-describedby="balance-hint"
+                />
+              </div>
+              <span id="balance-hint" class="field-hint">Average monthly repayment</span>
+            </div>
+
+          </div><!-- /.form-grid -->
+
+          <!-- Error banner -->
+          <div id="form-error" class="error-banner" role="alert" aria-live="polite" hidden>
+            <span class="error-icon">⚠️</span>
+            <span id="form-error-msg"></span>
+          </div>
+
+          <button type="submit" id="predict-btn" class="predict-btn" aria-label="Run prediction">
+            <span class="btn-text">Analyse Credit Risk</span>
+            <span class="btn-spinner" id="btn-spinner" aria-hidden="true"></span>
+            <span class="btn-arrow">→</span>
+          </button>
+
+        </form>
+      </section><!-- /.input-card -->
+
+      <!-- ── Results Card ── -->
+      <section class="card results-card" id="results-card" aria-live="polite" aria-label="Prediction Results">
+
+        <!-- Placeholder state -->
+        <div id="results-placeholder" class="results-placeholder">
+          <div class="placeholder-icon">🔮</div>
+          <p class="placeholder-text">
+            Fill in the customer profile and click<br />
+            <strong>Analyse Credit Risk</strong> to see the prediction.
+          </p>
+        </div>
+
+        <!-- Results content (hidden until first prediction) -->
+        <div id="results-content" class="results-content" hidden>
+
+          <!-- Risk Gauge -->
+          <div class="gauge-section">
+            <div class="gauge-container" role="img" aria-labelledby="gauge-label">
+              <svg class="gauge-svg" viewBox="0 0 200 120" aria-hidden="true">
+                <!-- Track arc -->
+                <path class="gauge-track"
+                  d="M 20 100 A 80 80 0 0 1 180 100"
+                  fill="none" stroke-width="16" stroke-linecap="round"
+                />
+                <!-- Value arc -->
+                <path class="gauge-value" id="gauge-arc"
+                  d="M 20 100 A 80 80 0 0 1 180 100"
+                  fill="none" stroke-width="16" stroke-linecap="round"
+                  stroke-dasharray="251.2" stroke-dashoffset="251.2"
+                />
+                <!-- Needle -->
+                <line id="gauge-needle"
+                  x1="100" y1="100" x2="100" y2="28"
+                  stroke="white" stroke-width="2.5"
+                  stroke-linecap="round"
+                  transform="rotate(0 100 100)"
+                />
+                <circle cx="100" cy="100" r="6" fill="white" />
+              </svg>
+              <div class="gauge-center">
+                <span class="gauge-score" id="gauge-score">—</span>
+                <span class="gauge-label" id="gauge-label">Risk Score</span>
+              </div>
+            </div>
+
+            <!-- Risk level badge -->
+            <div class="risk-badge-row">
+              <span class="risk-badge" id="risk-badge">—</span>
+            </div>
+          </div>
+
+          <!-- Model probabilities -->
+          <div class="model-proba-row">
+            <div class="proba-chip" title="Logistic Regression">
+              <span class="proba-label">LR</span>
+              <span class="proba-val" id="lr-prob">—</span>
+            </div>
+            <div class="proba-chip" title="Random Forest">
+              <span class="proba-label">RF</span>
+              <span class="proba-val" id="rf-prob">—</span>
+            </div>
+            <div class="proba-chip" title="Ensemble (weighted)">
+              <span class="proba-label">Ensemble</span>
+              <span class="proba-val" id="ensemble-prob">—</span>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- Explanation -->
+          <div class="insight-block" id="explanation-block">
+            <div class="insight-header">
+              <span class="insight-icon">🧠</span>
+              <h3 class="insight-title">AI Explanation</h3>
+            </div>
+            <p class="insight-body" id="explanation-text">—</p>
+          </div>
+
+          <!-- Recommendation -->
+          <div class="insight-block" id="recommendation-block">
+            <div class="insight-header">
+              <span class="insight-icon">💡</span>
+              <h3 class="insight-title">Business Recommendation</h3>
+            </div>
+            <p class="insight-body" id="recommendation-text">—</p>
+          </div>
+
+        </div><!-- /#results-content -->
+
+      </section><!-- /.results-card -->
+
+    </main><!-- /.main-grid -->
+
+    <!-- ── Info Banner ── -->
+    <section class="info-banner">
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-val">30 000</span>
+          <span class="info-key">Training Records</span>
+        </div>
+        <div class="info-item">
+          <span class="info-val">25</span>
+          <span class="info-key">Features</span>
+        </div>
+        <div class="info-item">
+          <span class="info-val">2</span>
+          <span class="info-key">ML Models</span>
+        </div>
+        <div class="info-item">
+          <span class="info-val">XAI</span>
+          <span class="info-key">Explainable AI</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Built for <strong>Hackathon 2026</strong> · UCI Credit-Card Dataset · FastAPI + ML</p>
+    </footer>
+
+  </div><!-- /.page-wrapper -->
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
